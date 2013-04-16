@@ -15,13 +15,19 @@ UserConfig::$SESSION_SECRET = $randomness;
 UserConfig::$mysql_db = $mysql_db;
 UserConfig::$mysql_user = $mysql_user;
 UserConfig::$mysql_password = $mysql_password;
-#UserConfig::$mysql_host = 'localhost';
-#UserConfig::$mysql_port = 3306;
+UserConfig::$mysql_host = $mysql_host;
+UserConfig::$mysql_port = $mysql_port;
+UserConfig::$mysql_socket = $mysql_socket;
 
 /**
  * User IDs of admins for this instance (to be able to access dashboard at /users/admin/)
  */
 UserConfig::$admins[] = 1; // usually first user has ID of 1
+
+/*
+ * Name of your application to be used in UI and emails to users
+ */
+UserConfig::$appName = $appName;
 
 /*
  * Uncomment next line to enable debug messages in error_log

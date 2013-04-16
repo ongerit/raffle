@@ -17,6 +17,9 @@ $randomness = '...some.random.characters.go.here...';
 $mysql_db = 'meetup';
 $mysql_user = 'meetup';
 $mysql_password = '...password...';
+#$mysql_host = 'localhost';
+#$mysql_port = 3306;
+#$mysql_socket = '/tmp/mysql.sock';
 
 /**
  * Meetup OAuth consumer key and secret
