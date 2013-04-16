@@ -11,7 +11,7 @@
 	border-top: 2em solid #e51a38;
 	border-bottom: 1em solid #e51a38;
 	margin: 0.5em;
-	width: 12em;
+	width: 20em;
 	height: 5em;
 	border-radius: 0.5em;
 }
@@ -26,6 +26,46 @@
 .groups li img {
 	max-width: 3em;
 	max-height: 3em;
+}
+
+.rsvps {
+	list-style:circle inside;
+	-moz-column-count: 4; /* Firefox */
+	-webkit-column-count: 4; /* Safari and Chrome */
+	column-count: 4;
+}
+
+.rsvp {
+	padding: 0.5em;
+	float: left;
+	border: 0.1em solid #e51a38;
+	border-top: 2em solid #e51a38;
+	border-bottom: 1em solid #e51a38;
+	margin: 2%;
+	width: 90%;
+	height: 7em;
+	border-radius: 0.5em;
+
+	display: inline-block;
+	column-break-inside: avoid;
+	-webkit-column-break-inside: avoid;
+	-moz-column-break-inside: avoid;
+}
+
+.thumb {
+	width: 6em;
+	height: 6em;
+
+	float: left;
+	padding: 0.3em;
+	margin-right: 1em;
+	text-align: center;
+}
+
+.rsvps .thumb img {
+	height: 100%;
+	max-width: 100%;
+	max-height: 100%;
 }
 
 .clb {

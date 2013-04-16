@@ -1,12 +1,11 @@
 <?php
-require_once(dirname(__FILE__).'/users/users.php');
+require_once(__DIR__.'/global.php');
 
 // get user if logged in or require user to login
 $user = User::get();
 #$user = User::require_login();
 
 $fetched_groups_organizer = array();
-$fetched_groups_member = array();
 
 if (!is_null($user)) {
 	// You can work with users, but it's recommended to tie your data to accounts, not users
@@ -31,14 +30,15 @@ if (!is_null($user)) {
 				$group_info = array(
 					'name' => $group['name'],
 					'link' => $group['link'],
-					'logo' => $group['group_photo']['thumb_link'],
+					'id' => $group['id'],
+					'logo' => isset($group['group_photo']) ? $group['group_photo']['thumb_link'] : null,
 					'members' => $group['members']
 				);
 
 				if ($group['organizer']['member_id'] == $meetup_id) {
 					$fetched_groups_organizer[] = $group_info;
-				} else {
-					$fetched_groups_member[] = $group_info;
+
+					//var_export($group_data);
 				}
 			}
 
@@ -56,7 +56,7 @@ if (!is_null($user)) {
 ?>
 <html>
 <head>
-	<title>Sample Meetup Application</title>
+	<title><?php echo $appName ?></title>
 	<?php StartupAPI::head(); ?>
 	<link rel="stylesheet" type="text/css" href="meetup.css"/>
 </head>
@@ -68,23 +68,13 @@ if (!is_null($user)) {
 ?>
 <h1>Welcome, <?php echo $user->getName() ?>!</h1>
 
-<div style="width: 400px; max-width: 100%">
-<a href="https://github.com/StartupAPI/sample-meetup-app/" target="_blank" style="float: left"><img alt="Octocat.png" src="http://startupapi.org/w/images/thumb/6/61/Octocat.png/50px-Octocat.png" width="50" height="50" border="0" align="top" style="margin-right: 1em"></a>
-This is a sample Meetup application powered by <a href="http://www.startupapi.com">Startup API</a>, you can see the <a href="https://github.com/StartupAPI/sample-meetup-app/" target="_blank">code on Github</a>.
-</div>
-<div style="clear: both"></div>
-
 <?php
 
 	usort($fetched_groups_organizer, function($a, $b) {
 		return $a['members'] > $b['members'] ? -1 : 1;
 	});
 
-	usort($fetched_groups_member, function($a, $b) {
-		return $a['members'] > $b['members'] ? -1 : 1;
-	});
-
-	if (count($fetched_groups_member) || count($fetched_groups_organizer)) {
+	if (count($fetched_groups_organizer)) {
 		if (count($fetched_groups_organizer)) {
 ?>
 <h3>You organize:</h3>
@@ -97,7 +87,7 @@ This is a sample Meetup application powered by <a href="http://www.startupapi.co
 						<img src="<?php echo $group['logo'] ?>" />
 					<?php } ?>
 					</div>
-					<a href="<?php echo $group['link'] ?>"><?php echo $group['name'] ?></a><br/>
+					<a href="events.php?group_id=<?php echo $group['id'] ?>"><?php echo $group['name'] ?></a><br/>
 					<?php echo $group['members'] ?> members
 					<div class="clb"/>
 				</li><?php
@@ -107,37 +97,16 @@ This is a sample Meetup application powered by <a href="http://www.startupapi.co
 <?php
 		}
 
-		if (count($fetched_groups_member)) {
-?>
-<h3>You're a member:</h3>
-<ul class="groups">
-<?php
-			foreach ($fetched_groups_member as $group) {
-				?><li>
-					<div class="logo">
-					<?php if ($group['logo'] != '') { ?>
-						<img src="<?php echo $group['logo'] ?>" />
-					<?php } ?>
-					</div>
-					<a href="<?php echo $group['link'] ?>"><?php echo $group['name'] ?></a><br/>
-					<?php echo $group['members'] ?> members
-					<div class="clb"/>
-				</li><?php
-			}
-?>
-</ul>
-<?php
-		}
 	} else { ?>
-		<p>You still didn't join any groups?!</p>
-		<p><a href="http://www.meetup.com/find/">Find a group and join immediately!</a></p>
+		<p>You still do not organize any groups?!</p>
+		<p><a href="http://www.meetup.com/create/">Time to start organizing!</a></p>
 	<?php
 	}
 }
 else
 {
 ?>
-<h1>Sample Meetup Application!</h1>
+<h1><?php echo $appName ?></h1>
 
 <?php
 	$meetup_module = AuthenticationModule::get('meetup');
