@@ -18,26 +18,31 @@ $page = 0; // requesting first page
 $keep_going = true;
 
 $events = array();
+
+// default value in case we didn't get the result
+$group_name = "Group: $group_id";
 while($keep_going) {
 	$result = $creds->makeOAuthRequest(
 		'http://api.meetup.com/2/events?status=upcoming&order=time&group_id='.$group_id,
 		'GET'
 	);
 	if ($result['code'] == 200) {
-		$group_data = json_decode(utf8_encode($result['body']), true);
+		$data = json_decode(utf8_encode($result['body']), true);
 
-		foreach ($group_data['results'] as $group) {
+		foreach ($data['results'] as $result) {
+			$group_name = $result['group']['name'];
+
 			$events[] = array(
-				'name' => $group['name'],
-				'id' => $group['id'],
-				'yes_rsvp_count' => $group['yes_rsvp_count']
+				'name' => $result['name'],
+				'id' => $result['id'],
+				'yes_rsvp_count' => $result['yes_rsvp_count']
 			);
 		}
 
 		// keep going while next meta parameter is set
-		$keep_going = $group_data['meta']['next'] !== '';
+		$keep_going = $data['meta']['next'] !== '';
 
-		if ($keep_going) {	
+		if ($keep_going) {
 			$page++;
 		}
 	} else {
@@ -53,7 +58,7 @@ while($keep_going) {
 </head>
 <body>
 <div style="float: right"><?php StartupAPI::power_strip(); ?></div>
-<h1>Group: <?php echo $group_id ?></h1>
+<h1><?php echo $group_name ?></h1>
 
 <h3>Events:</h3>
 <ul class="events">
