@@ -25,8 +25,9 @@ $keep_going = true;
 
 $rsvps = array();
 
-$group_name = "Group: $group_id";
-$event_name = "Event: $event_id";
+$group_name = array_key_exists('group_name', $_GET) ? $_GET['group_name'] : null;
+$event_name = null;
+
 while ($keep_going) {
 	$result = $creds->makeOAuthRequest(
 			'http://api.meetup.com/2/rsvps?rsvp=yes&order=social&event_id=' . $event_id, 'GET'
@@ -35,16 +36,15 @@ while ($keep_going) {
 		$data = json_decode(utf8_encode($result['body']), true);
 
 		foreach ($data['results'] as $result) {
-
-			if (isset($result['group']) && is_array($result['group']) && isset($result['group']['name'])) {
-				$group_name = $result['group']['name'];
+			if (is_null($group_name) && isset($result['group'])
+					&& is_array($result['group']) && isset($result['group']['urlname'])) {
+				$group_name = $result['group']['urlname'];
 			}
 
-			if (isset($result['event']) && is_array($result['event']) && isset($result['event']['name'])) {
+			if (is_null($event_name) && isset($result['event'])
+					&& is_array($result['event']) && isset($result['event']['name'])) {
 				$event_name = $result['event']['name'];
 			}
-			var_export($result);
-			exit;
 
 			$rsvps[] = array(
 				'name' => $result['member']['name'],
@@ -63,6 +63,14 @@ while ($keep_going) {
 		$keep_going = false;
 	}
 }
+
+if (is_null($group_name)) {
+	$group_name = "Group: $group_id";
+}
+
+if (is_null($event_name)) {
+	$event_name = "Event: $event_id";
+}
 ?>
 <html>
 	<head>
@@ -72,8 +80,8 @@ while ($keep_going) {
 	</head>
 	<body>
 		<div style="float: right"><?php StartupAPI::power_strip(); ?></div>
-		<h1>Group: <a href="events.php?group_id=<?php echo $group_id ?>"><?php echo $group_id ?></a></h1>
-		<h2>Event: <?php echo $event_id ?></h2>
+		<h1><a href="events.php?group_id=<?php echo $group_id ?>"><?php echo $group_name ?></a></h1>
+		<h2><?php echo $event_name ?></h2>
 
 		<div class="rsvps">
 			<?php

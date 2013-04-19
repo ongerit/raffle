@@ -65,7 +65,11 @@ while($keep_going) {
 <?php
 foreach ($events as $event) {
 	?><li>
-		<a href="event.php?event_id=<?php echo $event['id'] ?>&group_id=<?php echo $group_id ?>"><?php echo $event['name'] ?></a> (<?php echo $event['yes_rsvp_count'] ?> RSVPs)<br/>
+		<a href="event.php?event_id=<?php echo UserTools::escape($event['id'])
+				?>&group_id=<?php echo UserTools::escape($group_id)
+				?>&group_name=<?php echo UserTools::escape($group_name)
+				?>"><?php echo UserTools::escape($event['name']) ?></a>
+		(<?php echo UserTools::escape($event['yes_rsvp_count']) ?> RSVPs)
 	</li><?php
 }
 ?>
