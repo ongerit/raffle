@@ -28,41 +28,46 @@ $rsvps = array();
 $group_name = array_key_exists('group_name', $_GET) ? $_GET['group_name'] : null;
 $event_name = null;
 
-while ($keep_going) {
-	$result = $creds->makeOAuthRequest(
-			'http://api.meetup.com/2/rsvps?rsvp=yes&order=social&event_id=' . $event_id, 'GET'
-	);
-	if ($result['code'] == 200) {
-		$data = json_decode(utf8_encode($result['body']), true);
+try {
+	while ($keep_going) {
+		$result = $creds->makeOAuthRequest(
+				'http://api.meetup.com/2/rsvps?rsvp=yes&order=social&event_id=' . $event_id, 'GET'
+		);
+		if ($result['code'] == 200) {
+			$data = json_decode(utf8_encode($result['body']), true);
 
-		foreach ($data['results'] as $result) {
-			if (is_null($group_name) && isset($result['group'])
-					&& is_array($result['group']) && isset($result['group']['urlname'])) {
-				$group_name = $result['group']['urlname'];
+			foreach ($data['results'] as $result) {
+				if (is_null($group_name) && isset($result['group'])
+						&& is_array($result['group']) && isset($result['group']['urlname'])) {
+					$group_name = $result['group']['urlname'];
+				}
+
+				if (is_null($event_name) && isset($result['event'])
+						&& is_array($result['event']) && isset($result['event']['name'])) {
+					$event_name = $result['event']['name'];
+				}
+
+				$rsvps[] = array(
+					'name' => $result['member']['name'],
+					'id' => $result['member']['member_id'],
+					'photo_url' => isset($result['member_photo']) ? $result['member_photo']['thumb_link'] : 'http://img2.meetupstatic.com/2982428616572973604/img/noPhoto_80.gif'
+				);
 			}
 
-			if (is_null($event_name) && isset($result['event'])
-					&& is_array($result['event']) && isset($result['event']['name'])) {
-				$event_name = $result['event']['name'];
+			// keep going while next meta parameter is set
+			$keep_going = $data['meta']['next'] !== '';
+
+			if ($keep_going) {
+				$page++;
 			}
-
-			$rsvps[] = array(
-				'name' => $result['member']['name'],
-				'id' => $result['member']['member_id'],
-				'photo_url' => isset($result['member_photo']) ? $result['member_photo']['thumb_link'] : 'http://img2.meetupstatic.com/2982428616572973604/img/noPhoto_80.gif'
-			);
+		} else {
+			$keep_going = false;
 		}
-
-		// keep going while next meta parameter is set
-		$keep_going = $data['meta']['next'] !== '';
-
-		if ($keep_going) {
-			$page++;
-		}
-	} else {
-		$keep_going = false;
 	}
+} catch (OAuthException2 $ex) {
+	// silently ignoring all API call problems
 }
+
 
 if (is_null($group_name)) {
 	$group_name = "Group: $group_id";

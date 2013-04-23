@@ -18,51 +18,47 @@ if (!is_null($user)) {
 	$page = 0; // requesting first page
 	$keep_going = true;
 
-	while($keep_going) {
-		$result = $creds->makeOAuthRequest(
-			'http://api.meetup.com/2/groups?order=name&member_id=self',
-			'GET'
-		);
-		if ($result['code'] == 200) {
-			$group_data = json_decode(utf8_encode($result['body']), true);
+	try {
+		while($keep_going) {
+			$result = $creds->makeOAuthRequest(
+				'http://api.meetup.com/2/groups?order=name&member_id=self',
+				'GET'
+			);
+			if ($result['code'] == 200) {
+				$group_data = json_decode(utf8_encode($result['body']), true);
 
-			foreach ($group_data['results'] as $group) {
-				$group_info = array(
-					'name' => $group['name'],
-					'link' => $group['link'],
-					'id' => $group['id'],
-					'logo' => isset($group['group_photo']) ? $group['group_photo']['thumb_link'] : null,
-					'members' => $group['members']
-				);
+				foreach ($group_data['results'] as $group) {
+					$group_info = array(
+						'name' => $group['name'],
+						'link' => $group['link'],
+						'id' => $group['id'],
+						'logo' => isset($group['group_photo']) ? $group['group_photo']['thumb_link'] : null,
+						'members' => $group['members']
+					);
 
-				if ($group['organizer']['member_id'] == $meetup_id) {
-					$fetched_groups_organizer[] = $group_info;
+					if ($group['organizer']['member_id'] == $meetup_id) {
+						$fetched_groups_organizer[] = $group_info;
 
-					//var_export($group_data);
+						//var_export($group_data);
+					}
 				}
-			}
 
-			// keep going while next meta parameter is set
-			$keep_going = $group_data['meta']['next'] !== '';
+				// keep going while next meta parameter is set
+				$keep_going = $group_data['meta']['next'] !== '';
 
-			if ($keep_going) {	
-				$page++;
+				if ($keep_going) {
+					$page++;
+				}
+			} else {
+				$keep_going = false;
 			}
-		} else {
-			$keep_going = false;
 		}
+	} catch (OAuthException2 $ex) {
+		// silently ignoring all API call problems
 	}
 }
-?>
-<html>
-<head>
-	<title><?php echo $appName ?></title>
-	<?php StartupAPI::head(); ?>
-	<link rel="stylesheet" type="text/css" href="meetup.css"/>
-</head>
-<body>
-<div style="float: right"><?php StartupAPI::power_strip(); ?></div>
-<?php
+
+require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 
 if (!is_null($user)) {
 ?>
@@ -112,7 +108,5 @@ else
 	$meetup_module = AuthenticationModule::get('meetup');
 	?><p><?php $meetup_module->renderRegistrationForm(); ?></p><?php
 }
-?> 
 
-</body>
-</html>
+require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
