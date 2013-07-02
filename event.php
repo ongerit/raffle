@@ -88,17 +88,71 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 <h2><?php echo $event_name ?> on <?php echo UserTools::escape(date('M j, Y', $event_time)) ?></h2>
 
 <div class="well">
+	<button id="random" class="btn btn-primary">Pick a Random Winner!</button>
+
 	<div class="rsvps" id="winners"></div>
 
-	<button id="random" class="btn btn-primary">Pick a Random Winner!</button>
 	<script>
 		$('#random').click(function(e) {
-			var all = $('#all_rsvps .rsvp');
-			var picked_index = Math.floor(Math.random() * (all.length - 1));
-			var picked = $(all[picked_index]);
-			picked.remove().appendTo($('#winners'));
+			var all = $('#all_rsvps .rsvp'),
+			picked_index,
+			picked,
+			fake,
+			tries = 20;
+
+			var animator = function(number) {
+				$('#random').attr('disabled', 'disabled').removeClass('btn-primary');
+
+				if (fake) {
+					picked.removeClass('picking');
+					fake.remove();
+				}
+
+				picked_index = Math.round(Math.random() * (all.length - 1));
+				picked = $(all[picked_index]);
+				fake = picked.clone(true);
+				fake.appendTo($('#winners'));
+
+				picked.addClass('picking');
+
+				var progress = (tries - number) * 100 / tries;
+
+				$('.progress .bar').width(progress + '%');
+
+				if (number > 0) {
+					window.setTimeout(function() { animator(number - 1); }, 1000 / number);
+				} else {
+					if (fake) {
+						picked.removeClass('picking');
+						fake.remove();
+					}
+
+					// actually picking
+					picked_index = Math.round(Math.random() * (all.length - 1));
+					picked = $(all[picked_index]);
+					picked.remove().appendTo($('#winners'));
+
+					$('#random').removeAttr('disabled').addClass('btn-primary');
+
+					$('.progress .bar').width('100%');
+				}
+			}
+
+			$('.progress .bar').width(0, 0);
+			// random animation
+			if (all.length > 1) {
+				animator(tries);
+			} else {
+				animator(0);
+			}
 		});
 	</script>
+</div>
+
+<h2>All RSVPs</h2>
+
+<div class="progress">
+  <div class="bar bar-success" style="width: 0%;"></div>
 </div>
 
 <div class="rsvps" id="all_rsvps">
