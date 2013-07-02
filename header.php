@@ -17,8 +17,8 @@ $menus = array(
 );
 
 $page_title = UserConfig::$appName;
-if (isset($TITLE)) {
-	$page_title = "$page_title - $TITLE";
+if (isset($_TITLE)) {
+	$page_title = $_TITLE . ' - ' . $page_title;
 }
 ?><!DOCTYPE html>
 <html lang="en">

@@ -45,6 +45,7 @@ try {
 				if (is_null($event_name) && isset($result['event'])
 						&& is_array($result['event']) && isset($result['event']['name'])) {
 					$event_name = $result['event']['name'];
+					$event_time = $result['event']['time'] / 1000;
 				}
 
 				$rsvps[] = array(
@@ -76,33 +77,34 @@ if (is_null($group_name)) {
 if (is_null($event_name)) {
 	$event_name = "Event: $event_id";
 }
+
+$_TITLE = $event_name . ' on ' . date('M j, Y', $event_time);
+
+require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 ?>
-<html>
-	<head>
-		<title><?php echo $appName ?></title>
-		<?php StartupAPI::head(); ?>
-		<link rel="stylesheet" type="text/css" href="meetup.css"/>
-	</head>
-	<body>
-		<div style="float: right"><?php StartupAPI::power_strip(); ?></div>
-		<h1><a href="events.php?group_id=<?php echo $group_id ?>"><?php echo $group_name ?></a></h1>
-		<h2><?php echo $event_name ?></h2>
+<link rel="stylesheet" type="text/css" href="meetup.css"/>
 
-		<div class="rsvps">
-			<?php
-			foreach ($rsvps as $rsvp) {
-				?>
-				<div class="rsvp">
-					<div class="thumb">
-						<img src="<?php echo $rsvp['photo_url'] ?>"/>
-					</div>
-					<?php echo $rsvp['name'] ?>
-					<div class="clb"></div>
-				</div>
-				<?php
-			}
-			?>
+<h1><a href="events.php?group_id=<?php echo $group_id ?>"><?php echo $group_name ?></a></h1>
+<h2><?php echo $event_name ?> on <?php echo UserTools::escape(date('M j, Y', $event_time)) ?></h2>
+
+<div class="well">
+	<button class="btn btn-primary">Pick a Random Winner!</button>
+</div>
+
+<div class="rsvps">
+	<?php
+	foreach ($rsvps as $rsvp) {
+		?>
+		<div class="rsvp">
+			<div class="thumb">
+				<img src="<?php echo $rsvp['photo_url'] ?>"/>
+			</div>
+			<?php echo $rsvp['name'] ?>
+			<div class="clb"></div>
 		</div>
-
-	</body>
-</html>
+		<?php
+	}
+	?>
+</div>
+<?
+require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');

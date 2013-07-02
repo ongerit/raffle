@@ -36,7 +36,8 @@ try {
 				$events[] = array(
 					'name' => $result['name'],
 					'id' => $result['id'],
-					'yes_rsvp_count' => $result['yes_rsvp_count']
+					'yes_rsvp_count' => $result['yes_rsvp_count'],
+					'time' => $result['time'] / 1000
 				);
 			}
 
@@ -53,31 +54,26 @@ try {
 } catch (OAuthException2 $ex) {
 	// silently ignoring all API call problems
 }
-?>
-<html>
-	<head>
-		<title><?php echo $appName ?></title>
-<?php StartupAPI::head(); ?>
-		<link rel="stylesheet" type="text/css" href="meetup.css"/>
-	</head>
-	<body>
-		<div style="float: right"><?php StartupAPI::power_strip(); ?></div>
-		<h1><?php echo $group_name ?></h1>
 
-		<h3>Events:</h3>
-		<ul class="events">
-<?php
-foreach ($events as $event) {
-	?><li>
-					<a href="event.php?event_id=<?php echo UserTools::escape($event['id'])
-	?>&group_id=<?php echo UserTools::escape($group_id)
-	?>&group_name=<?php echo UserTools::escape($group_name)
-			?>"><?php echo UserTools::escape($event['name']) ?></a>
-					(<?php echo UserTools::escape($event['yes_rsvp_count']) ?> RSVPs)
-				</li><?php
-			   }
-?>
-		</ul>
+$_TITLE = $group_name;
 
-	</body>
-</html>
+require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
+?>
+<h1><?php echo $group_name ?></h1>
+
+<h3>Events:</h3>
+<ul class="events">
+	<?php
+	foreach ($events as $event) {
+		?><li>
+			<a href="event.php?event_id=<?php echo UserTools::escape($event['id'])
+		?>&group_id=<?php echo UserTools::escape($group_id)
+		?>&group_name=<?php echo UserTools::escape($group_name)
+		?>"><?php echo UserTools::escape($event['name']) ?></a>
+			on <?php echo UserTools::escape(date('M j, Y', $event['time'])) ?> (<?php echo UserTools::escape($event['yes_rsvp_count']) ?> RSVPs)
+		</li><?php
+	   }
+	?>
+</ul>
+<?
+require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
