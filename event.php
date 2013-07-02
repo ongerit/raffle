@@ -88,10 +88,20 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 <h2><?php echo $event_name ?> on <?php echo UserTools::escape(date('M j, Y', $event_time)) ?></h2>
 
 <div class="well">
-	<button class="btn btn-primary">Pick a Random Winner!</button>
+	<div class="rsvps" id="winners"></div>
+
+	<button id="random" class="btn btn-primary">Pick a Random Winner!</button>
+	<script>
+		$('#random').click(function(e) {
+			var all = $('#all_rsvps .rsvp');
+			var picked_index = Math.floor(Math.random() * (all.length - 1));
+			var picked = $(all[picked_index]);
+			picked.remove().appendTo($('#winners'));
+		});
+	</script>
 </div>
 
-<div class="rsvps">
+<div class="rsvps" id="all_rsvps">
 	<?php
 	foreach ($rsvps as $rsvp) {
 		?>
