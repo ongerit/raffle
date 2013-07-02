@@ -83,16 +83,33 @@ $_TITLE = $event_name . ' on ' . date('M j, Y', $event_time);
 require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 ?>
 <link rel="stylesheet" type="text/css" href="meetup.css"/>
+<style>
+	#random {
+		margin-right: 1em;
+	}
+
+	.progress {
+		margin-top: 0.3em;
+	}
+</style>
 
 <h1><a href="events.php?group_id=<?php echo $group_id ?>"><?php echo $group_name ?></a></h1>
 <h2><?php echo $event_name ?> on <?php echo UserTools::escape(date('M j, Y', $event_time)) ?></h2>
 
 <div class="well">
-	<button id="random" class="btn btn-primary">Pick a Random Winner!</button>
+	<button id="random" class="pull-left btn btn-primary">Pick a Random Winner!</button>
+
+	<div class="progress progress-striped">
+		<div class="bar" style="width: 0%;"></div>
+	</div>
+
+	<div class="clb"></div>
 
 	<div class="rsvps" id="winners"></div>
 
 	<script>
+		var progress_html = $('.progress').html();
+
 		$('#random').click(function(e) {
 			var all = $('#all_rsvps .rsvp'),
 			picked_index,
@@ -117,42 +134,39 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 
 				var progress = (tries - number) * 100 / tries;
 
+				$('.progress').addClass('progress-striped');
 				$('.progress .bar').width(progress + '%');
 
 				if (number > 0) {
 					window.setTimeout(function() { animator(number - 1); }, 1000 / number);
 				} else {
-					if (fake) {
-						picked.removeClass('picking');
-						fake.remove();
-					}
+					window.setTimeout(function() {
+						if (fake) {
+							picked.removeClass('picking');
+							fake.remove();
+						}
 
-					// actually picking
-					picked_index = Math.round(Math.random() * (all.length - 1));
-					picked = $(all[picked_index]);
-					picked.remove().appendTo($('#winners'));
+						// actually picking
+						picked.remove().appendTo($('#winners'));
 
-					$('#random').removeAttr('disabled').addClass('btn-primary');
+						$('#random').removeAttr('disabled').addClass('btn-primary');
 
-					$('.progress .bar').width('100%');
+						$('.progress').removeClass('progress-striped');
+						$('.progress .bar').width('100%').addClass('bar-success');
+					}, 1000);
 				}
 			}
 
-			$('.progress .bar').width(0, 0);
+			$('.progress').html(progress_html);
 			// random animation
 			if (all.length > 1) {
 				animator(tries);
 			} else {
 				animator(0);
+				$('#random').attr('disabled', 'disabled').removeClass('btn-primary');
 			}
 		});
 	</script>
-</div>
-
-<h2>All RSVPs</h2>
-
-<div class="progress">
-  <div class="bar bar-success" style="width: 0%;"></div>
 </div>
 
 <div class="rsvps" id="all_rsvps">
