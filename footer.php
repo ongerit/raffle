@@ -1,5 +1,6 @@
 			</div>
 		</div>
+	</div>
 <!-- footer starts -->
 <footer class="footer startupapi-footer">
 	<div class="container">

@@ -76,5 +76,5 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 	   }
 	?>
 </ul>
-<?
+<?php
 require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/footer.php');

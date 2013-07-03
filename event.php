@@ -91,11 +91,15 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 	.progress {
 		margin: 0.3em 0;
 	}
+
+	#winner_section {
+		display: none;
+	}
 </style>
 
 <h2><?php echo $event_name ?> on <?php echo UserTools::escape(date('M j, Y', $event_time)) ?></h2>
 
-<div class="well">
+<div class="well" id="controls">
 	<button id="random" class="pull-left btn btn-primary">Pick a Random Winner!</button>
 
 	<div class="progress progress-striped">
@@ -138,7 +142,7 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 				$('.progress .bar').width(progress + '%');
 
 				if (number > 0) {
-					window.setTimeout(function() { animator(number - 1); }, 1000 / number);
+					window.setTimeout(function() { animator(number - 1); }, 700 / number);
 				} else {
 					window.setTimeout(function() {
 						if (picked) {
@@ -156,28 +160,36 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 							$('#random').removeAttr('disabled').addClass('btn-primary');
 						}
 
-						$('.progress').removeClass('progress-striped');
-						$('.progress .bar').width('100%').addClass('bar-success');
-					}, 1000);
+						setTimeout(function() {
+							$('.progress').removeClass('progress-striped');
+							$('.progress .bar').width('100%').addClass('bar-success');
+						}, 100);
+					}, 1);
 				}
 			}
 
 			$('.progress').html(progress_html);
+
+			$('#winner_section').show();
+
 			// random animation
 			if (all.length > 1) {
 				animator(tries);
 			} else {
+				$('#controls').hide();
 				animator(0);
 			}
 		});
 	</script>
 </div>
 
-<h2>Winners!</h2>
-<div class="well well-small">
-	<div class="rsvps" id="winners">
+<section id="winner_section">
+	<h2>Winners!</h2>
+	<div class="well well-small">
+		<div class="rsvps" id="winners">
+		</div>
 	</div>
-</div>
+</section>
 
 <h2><?php echo count($rsvps) ?> RSVPs</h2>
 <div class="rsvps" id="all_rsvps">
@@ -195,5 +207,5 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 	}
 	?>
 </div>
-<?
+<?php
 require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/footer.php');
