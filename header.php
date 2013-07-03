@@ -1,18 +1,20 @@
 <?php
 require_once(__DIR__ . '/global.php');
 
-if (!isset($CURRENT_PAGE)) {
-	$CURRENT_PAGE = 'home';
+if (!isset($_CURRENT_PAGE)) {
+	$_CURRENT_PAGE = 'home';
 }
 
 $menus = array(
-	'home' => array(
-		'title' => 'Home',
+	'raffle' => array(
+		'icon' => 'icon-gift',
+		'title' => 'Raffle',
 		'url' => $project_env['ROOT_ABSOLUTE_URL_PATH'] . '/'
 	),
 	'about' => array(
+		'icon' => 'icon-info-sign',
 		'title' => 'About',
-		'url' => $project_env['ROOT_ABSOLUTE_URL_PATH'] . 'about.php'
+		'url' => $project_env['ROOT_ABSOLUTE_URL_PATH'] . '/about.html'
 	)
 );
 
@@ -26,6 +28,7 @@ if (isset($_TITLE)) {
 		<title><?php echo UserTools::escape($page_title) ?></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<?php StartupAPI::head(); ?>
+		<link rel="stylesheet" type="text/css" href="meetup.css"/>
 	</head>
 	<body>
 		<div class="navbar">
@@ -36,8 +39,15 @@ if (isset($_TITLE)) {
 
 				<ul class="nav">
 					<?php foreach ($menus as $slug => $menu) { ?>
-						<li<?php if ($CURRENT_PAGE == $slug) { ?> class="active"<?php } ?>>
-							<a href="<?php echo $menu['url'] ?>"><?php echo $menu['title'] ?></a>
+						<li<?php if ($_CURRENT_PAGE == $slug) { ?> class="active"<?php } ?>>
+							<a href="<?php echo $menu['url'] ?>">
+								<?php
+								if ($menu['icon']) {
+									?><i class="<?php echo $menu['icon'] ?>"></i><?php
+						}
+								?>
+								<?php echo $menu['title'] ?>
+							</a>
 						</li>
 					<?php } ?>
 				</ul>

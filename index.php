@@ -58,6 +58,8 @@ if (!is_null($user)) {
 	}
 }
 
+$_CURRENT_PAGE = 'raffle';
+
 require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 
 if (!is_null($user)) {
@@ -95,7 +97,7 @@ if (!is_null($user)) {
 
 	} else { ?>
 		<p>You still do not organize any groups?!</p>
-		<p><a href="http://www.meetup.com/create/">Time to start organizing!</a></p>
+		<p><a target="_blank" href="http://www.meetup.com/create/">Time to start organizing!</a></p>
 	<?php
 	}
 }
@@ -109,4 +111,4 @@ else
 	?><p><?php $meetup_module->renderRegistrationForm(); ?></p><?php
 }
 
-require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
+require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/footer.php');

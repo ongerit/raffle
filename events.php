@@ -56,6 +56,7 @@ try {
 }
 
 $_TITLE = $group_name;
+$_CURRENT_PAGE = 'raffle';
 
 require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 ?>
@@ -76,4 +77,4 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 	?>
 </ul>
 <?
-require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
+require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/footer.php');

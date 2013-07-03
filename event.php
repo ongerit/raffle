@@ -79,21 +79,20 @@ if (is_null($event_name)) {
 }
 
 $_TITLE = $event_name . ' on ' . date('M j, Y', $event_time);
+$_CURRENT_PAGE = 'raffle';
 
 require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 ?>
-<link rel="stylesheet" type="text/css" href="meetup.css"/>
 <style>
 	#random {
 		margin-right: 1em;
 	}
 
 	.progress {
-		margin-top: 0.3em;
+		margin: 0.3em 0;
 	}
 </style>
 
-<h1><a href="events.php?group_id=<?php echo $group_id ?>"><?php echo $group_name ?></a></h1>
 <h2><?php echo $event_name ?> on <?php echo UserTools::escape(date('M j, Y', $event_time)) ?></h2>
 
 <div class="well">
@@ -105,8 +104,6 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 
 	<div class="clb"></div>
 
-	<div class="rsvps" id="winners"></div>
-
 	<script>
 		var progress_html = $('.progress').html();
 
@@ -115,13 +112,16 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 			picked_index,
 			picked,
 			fake,
-			tries = 20;
+			tries = 30;
 
 			var animator = function(number) {
 				$('#random').attr('disabled', 'disabled').removeClass('btn-primary');
 
-				if (fake) {
+				if (picked) {
 					picked.removeClass('picking');
+				}
+
+				if (fake) {
 					fake.remove();
 				}
 
@@ -141,15 +141,20 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 					window.setTimeout(function() { animator(number - 1); }, 1000 / number);
 				} else {
 					window.setTimeout(function() {
-						if (fake) {
+						if (picked) {
 							picked.removeClass('picking');
+						}
+
+						if (fake) {
 							fake.remove();
 						}
 
 						// actually picking
 						picked.remove().appendTo($('#winners'));
 
-						$('#random').removeAttr('disabled').addClass('btn-primary');
+						if (all.length > 1) {
+							$('#random').removeAttr('disabled').addClass('btn-primary');
+						}
 
 						$('.progress').removeClass('progress-striped');
 						$('.progress .bar').width('100%').addClass('bar-success');
@@ -163,12 +168,18 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 				animator(tries);
 			} else {
 				animator(0);
-				$('#random').attr('disabled', 'disabled').removeClass('btn-primary');
 			}
 		});
 	</script>
 </div>
 
+<h2>Winners!</h2>
+<div class="well well-small">
+	<div class="rsvps" id="winners">
+	</div>
+</div>
+
+<h2><?php echo count($rsvps) ?> RSVPs</h2>
 <div class="rsvps" id="all_rsvps">
 	<?php
 	foreach ($rsvps as $rsvp) {
@@ -185,4 +196,4 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 	?>
 </div>
 <?
-require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
+require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/footer.php');
