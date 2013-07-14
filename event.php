@@ -19,6 +19,7 @@ $meetup_id = $meetup_info['id'];
  */
 $group_name = null;
 $event_name = null;
+$event_url = null;
 
 $hosts = array();
 
@@ -32,6 +33,7 @@ try {
 
 		$group_name = $data['group']['name'];
 		$event_name = $data['name'];
+		$event_url = $data['event_url'];
 		$event_time = $data['time'] / 1000;
 
 		foreach ($data['event_hosts'] as $host) {
@@ -150,7 +152,7 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 </style>
 
 <h2>
-	<?php echo $event_name ?> on <?php echo UserTools::escape(date('M j, Y', $event_time)) ?>
+	<a target="_blank" href="<?php echo $event_url ?>"><?php echo $event_name ?></a> on <?php echo UserTools::escape(date('M j, Y', $event_time)) ?>
 
 	<div class="btn-group" data-toggle="buttons-radio">
 		<button class="btn" id="allrsvps"><i class="icon-ok"></i> All RSVPs</button>
@@ -243,6 +245,7 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 
 							// actually picking
 							picked.remove().appendTo($('#winners'));
+							picked.style.webkitTransform = 'scale(1)';
 
 							$('#random').removeAttr('disabled').addClass('btn-primary');
 
