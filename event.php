@@ -282,7 +282,7 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 	</div>
 </section>
 
-<h2><?php echo count($rsvps) ?> RSVPs</h2>
+<h2><?php echo count($rsvps) ?> RSVPs, <?php echo count($checkins) ?> Check-ins</h2>
 <div class="rsvps" id="all_rsvps">
 	<?php
 	foreach ($rsvps as $rsvp) {
