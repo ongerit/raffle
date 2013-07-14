@@ -223,6 +223,7 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 					picked = $(all[picked_index]);
 					fake = picked.clone(true);
 					fake.appendTo($('#winners'));
+					fake.style.webkitTransform = 'scale(1)';
 
 					picked.addClass('picking');
 
