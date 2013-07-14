@@ -74,10 +74,6 @@ try {
 					'id' => $result['member']['member_id'],
 					'photo_url' => isset($result['member_photo']) ? $result['member_photo']['thumb_link'] : 'http://img2.meetupstatic.com/2982428616572973604/img/noPhoto_80.gif'
 				);
-
-				if (rand(0, 100) > 90) {
-					$checkins[$result['member']['member_id']] = true;
-				}
 			}
 
 			// keep going while next meta parameter is set
