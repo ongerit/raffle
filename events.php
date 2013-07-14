@@ -67,10 +67,7 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 	<?php
 	foreach ($events as $event) {
 		?><li>
-			<a href="event.php?event_id=<?php echo UserTools::escape($event['id'])
-		?>&group_id=<?php echo UserTools::escape($group_id)
-		?>&group_name=<?php echo UserTools::escape($group_name)
-		?>"><?php echo UserTools::escape($event['name']) ?></a>
+			<a href="event.php?event_id=<?php echo UserTools::escape($event['id']) ?>"><?php echo UserTools::escape($event['name']) ?></a>
 			on <?php echo UserTools::escape(date('M j, Y', $event['time'])) ?> (<?php echo UserTools::escape($event['yes_rsvp_count']) ?> RSVPs)
 		</li><?php
 	   }

@@ -28,21 +28,13 @@
 	max-height: 3em;
 }
 
-.rsvps {
-	list-style: circle inside;
-	-moz-column-count: 3; /* Firefox */
-	-webkit-column-count: 3; /* Safari and Chrome */
-	column-count: 3;
-}
-
 .rsvp {
 	padding: 0.5em;
-	float: left;
 	border: 0.1em solid #e51a38;
 	border-top: 2em solid #e51a38;
 	border-bottom: 1em solid #e51a38;
 	margin: 2%;
-	width: 85%;
+	width: 24%;
 	height: 7em;
 	max-width: 18em;
 	border-radius: 1em;
@@ -51,9 +43,6 @@
 	background-color: white;
 
 	display: inline-block;
-	column-break-inside: avoid;
-	-webkit-column-break-inside: avoid;
-	-moz-column-break-inside: avoid;
 }
 
 .rsvp.picking {
@@ -85,4 +74,8 @@
 
 h3 {
 	clear: both;
+}
+
+.checkedin {
+	color: green;
 }
