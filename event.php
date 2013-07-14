@@ -245,7 +245,6 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 
 							// actually picking
 							picked.remove().appendTo($('#winners'));
-							picked.style.webkitTransform = 'scale(1)';
 
 							$('#random').removeAttr('disabled').addClass('btn-primary');
 
