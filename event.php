@@ -19,6 +19,7 @@ $meetup_id = $meetup_info['id'];
  */
 $group_name = null;
 $event_name = null;
+$event_url = null;
 
 $hosts = array();
 
@@ -32,6 +33,7 @@ try {
 
 		$group_name = $data['group']['name'];
 		$event_name = $data['name'];
+		$event_url = $data['event_url'];
 		$event_time = $data['time'] / 1000;
 
 		foreach ($data['event_hosts'] as $host) {
@@ -73,10 +75,6 @@ try {
 					'id' => $result['member']['member_id'],
 					'photo_url' => isset($result['member_photo']) ? $result['member_photo']['thumb_link'] : 'http://img2.meetupstatic.com/2982428616572973604/img/noPhoto_80.gif'
 				);
-
-				if (rand(0, 100) > 90) {
-					$checkins[$result['member']['member_id']] = true;
-				}
 			}
 
 			// keep going while next meta parameter is set
@@ -230,7 +228,7 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 	</div>
 </section>
 
-<h2><?php echo count($rsvps) ?> RSVPs</h2>
+<h2><?php echo count($rsvps) ?> RSVPs, <?php echo count($checkins) ?> Check-ins</h2>
 <div class="rsvps" id="all_rsvps">
 	<?php
 	foreach ($rsvps as $rsvp) {
