@@ -54,41 +54,13 @@ try {
 	// silently ignoring all API call problems
 }
 
-$_CURRENT_PAGE = 'raffle';
-
-require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
-
 usort($fetched_groups_organizer, function($a, $b) {
-			return $a['members'] > $b['members'] ? -1 : 1;
-		});
+	return $a['members'] > $b['members'] ? -1 : 1;
+});
 
-if (count($fetched_groups_organizer)) {
-	if (count($fetched_groups_organizer)) {
-		?>
-		<h3>You organize</h3>
-		<ul class="groups">
-			<?php
-			foreach ($fetched_groups_organizer as $group) {
-				?><li>
-					<div class="logo">
-						<?php if ($group['logo'] != '') { ?>
-							<img src="<?php echo $group['logo'] ?>" />
-						<?php } ?>
-					</div>
-					<a href="events.php?group_id=<?php echo $group['id'] ?>"><?php echo $group['name'] ?></a><br/>
-					<?php echo $group['members'] ?> members
-					<div class="clb"/>
-				</li><?php
-		}
-				?>
-		</ul>
-		<?php
-	}
-} else {
-	?>
-	<p>You still do not organize any groups?!</p>
-	<p><a target="_blank" href="http://www.meetup.com/create/">Time to start organizing!</a></p>
-	<?php
-}
+$template_info = StartupAPI::getTemplateInfo();
 
-require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/footer.php');
+$template_info['fetched_groups_organizer'] = $fetched_groups_organizer;
+
+// add more data for your page
+StartupAPI::$template->display('@raffle/index.html.twig', $template_info);

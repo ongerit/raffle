@@ -1,31 +1,27 @@
-.groups {
-	list-style-type: none;
-	padding: 0;
-	clear: both;
-}
-
-.groups li {
+.group {
 	padding: 0.5em;
-	float: left;
 	border: 0.1em solid #e51a38;
 	border-top: 2em solid #e51a38;
-	border-bottom: 1em solid #e51a38;
+	border-bottom: 1.2em solid #e51a38;
 	margin: 0.5em;
-	width: 20em;
-	height: 5em;
-	border-radius: 0.5em;
+	height: 8em;
+	border-radius: 0.8em;
 }
 
-.groups .logo {
+.group .logo img {
 	float: left;
-	margin-right: 0.5em;
-	width: 3em;
-	height: 5em;
-}
-
-.groups li img {
+	margin-right: 1em;
 	max-width: 3em;
 	max-height: 3em;
+}
+
+.group .name {
+	display: block;
+	text-overflow: ellipsis;
+
+	/* Required for text-overflow to do anything */
+	white-space: nowrap;
+	overflow: hidden;
 }
 
 .rsvp {
@@ -66,10 +62,6 @@
 	height: 100%;
 	max-width: 100%;
 	max-height: 100%;
-}
-
-.clb {
-	clear: both;
 }
 
 h3 {

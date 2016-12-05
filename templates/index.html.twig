@@ -1,0 +1,30 @@
+{% extends '@startupapi/page.html.twig' %}
+{% block title %}Raffle - {{UserConfig.appName}}{% endblock %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{{UserConfig.SITEROOTURL}}raffle/meetup.css">
+
+<div class="container">
+    {% if fetched_groups_organizer %}
+        <h3 class="text-center">You organize</h3>
+
+        <div class="row">
+            {% for group in fetched_groups_organizer %}
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="group">
+                        <div class="logo">
+                            {% if group.logo %}
+                                <img src="{{group.logo}}" />
+                            {% endif %}
+                        </div>
+                        <a class="name" href="events.php?group_id={{group.id}}">{{group.name}}</a>
+                        {{group.members}} members
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>You still do not organize any groups?!</p>
+        <p><a target="_blank" href="http://www.meetup.com/create/">Time to start organizing!</a></p>
+    {% endif %}
+</div>
+{% endblock %}
