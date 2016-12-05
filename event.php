@@ -54,7 +54,6 @@ $page = 0; // requesting first page
 $keep_going = true;
 
 $rsvps = array();
-$checkins = array();
 
 try {
 	while ($keep_going) {
@@ -92,37 +91,6 @@ try {
 	// silently ignoring all API call problems
 }
 
-/*
- *  Getting check-ins
- */
-$page = 0; // requesting first page
-$keep_going = true;
-
-try {
-	while ($keep_going) {
-		$result = $creds->makeOAuthRequest(
-				'http://api.meetup.com/2/checkins?event_id=' . $event_id, 'GET'
-		);
-		if ($result['code'] == 200) {
-			$data = json_decode(utf8_encode($result['body']), true);
-
-			foreach ($data['results'] as $result) {
-				$checkins[$result['member_id']] = true;
-			}
-
-			// keep going while next meta parameter is set
-			$keep_going = $data['meta']['next'] !== '';
-
-			if ($keep_going) {
-				$page++;
-			}
-		} else {
-			$keep_going = false;
-		}
-	}
-} catch (OAuthException2 $ex) {
-	// silently ignoring all API call problems
-}
 
 if (is_null($group_name)) {
 	$group_name = "Group: $group_id";
@@ -153,11 +121,6 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 
 <h2>
 	<a target="_blank" href="<?php echo $event_url ?>"><?php echo $event_name ?></a> on <?php echo UserTools::escape(date('M j, Y', $event_time)) ?>
-
-	<div class="btn-group" data-toggle="buttons-radio">
-		<button class="btn" id="allrsvps"><i class="icon-ok"></i> All RSVPs</button>
-		<button class="btn" id="checkedin"><i class="icon-flag"></i> Checked In</button>
-	</div>
 </h2>
 
 <div class="well" id="controls">
@@ -173,16 +136,9 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 		$().ready(function(e) {
 			var progress_html = $('.progress').html();
 
-			$('#allrsvps, #checkedin').click(function(e) {
+			$('#allrsvps').click(function(e) {
 				setTimeout(function(e) {
-					var shown_num = 0;
-
-					if ($('#checkedin').hasClass('active')) {
-						$('#all_rsvps .rsvp').hide();
-						shown_num = $('#all_rsvps .rsvp').has('.checkedin').show().length;
-					} else {
-						shown_num = $('#all_rsvps .rsvp').show().length;
-					}
+					var shown_num = $('#all_rsvps .rsvp').show().length;
 
 					if (shown_num > 0) {
 						$('#controls').show();
@@ -194,19 +150,11 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 			$('#allrsvps').click();
 
 			$('#random').click(function(e) {
-				var all = [],
+				var all = $('#all_rsvps .rsvp'),
 				picked_index,
 				picked,
 				fake,
 				tries = 30;
-
-				if ($('#allrsvps').hasClass('active')) {
-					all = $('#all_rsvps .rsvp');
-				} else {
-					all = $('#all_rsvps .rsvp').has('.checkedin');
-				}
-
-				console.log(all);
 
 				var animator = function(number) {
 					$('#random').attr('disabled', 'disabled').removeClass('btn-primary');
@@ -290,11 +238,6 @@ require_once($project_env['ROOT_FILESYSTEM_PATH'] . '/header.php');
 				<img src="<?php echo $rsvp['photo_url'] ?>"/>
 			</div>
 			<?php echo $rsvp['name'] ?>
-			<?php
-			if (array_key_exists($rsvp['id'], $checkins)) {
-				?><div class="checkedin">Checked in!</div><?php
-	}
-			?>
 			<div class="clb"></div>
 		</div>
 		<?php
