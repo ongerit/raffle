@@ -1,4 +1,4 @@
-.group {
+.group, .rsvp .tag {
 	padding: 0.5em;
 	border: 0.1em solid #e51a38;
 	border-top: 2em solid #e51a38;
@@ -8,11 +8,24 @@
 	border-radius: 0.8em;
 }
 
-.group .logo img {
+.rsvp .tag {
+	height: 10em;
+}
+
+.rsvp .name {
+	font-size: x-large;
+}
+
+.group .logo img, .rsvps .thumb img {
 	float: left;
 	margin-right: 1em;
 	max-width: 3em;
 	max-height: 3em;
+}
+
+.rsvps .thumb img {
+	max-width: 6em;
+	max-height: 6em;
 }
 
 .group .name {
@@ -24,50 +37,9 @@
 	overflow: hidden;
 }
 
-.rsvp {
-	padding: 0.5em;
-	border: 0.1em solid #e51a38;
-	border-top: 2em solid #e51a38;
-	border-bottom: 1em solid #e51a38;
-	margin: 2%;
-	width: 24%;
-	height: 7em;
-	max-width: 18em;
-	border-radius: 1em;
-	border-top-left-radius: 1.3em;
-	border-top-right-radius: 1.3em;
-	background-color: white;
-
-	display: inline-block;
-}
-
-.rsvp.picking {
+.rsvp.picking .tag {
 	border: 0.1em solid black;
 	border-top: 2em solid black;
 	border-bottom: 1em solid black;
 	opacity: 0.2;
-}
-
-.thumb {
-	width: 6em;
-	height: 6em;
-
-	float: left;
-	padding: 0.3em;
-	margin-right: 1em;
-	text-align: center;
-}
-
-.rsvps .thumb img {
-	height: 100%;
-	max-width: 100%;
-	max-height: 100%;
-}
-
-h3 {
-	clear: both;
-}
-
-.checkedin {
-	color: green;
 }
