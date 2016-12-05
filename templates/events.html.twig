@@ -1,0 +1,25 @@
+{% extends '@startupapi/page.html.twig' %}
+{% block title %}{{group_name}} Raffle - {{UserConfig.appName}}{% endblock %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{{UserConfig.SITEROOTURL}}raffle/meetup.css">
+
+<div class="container">
+    <h1>{{group_name}}</h1>
+
+    {% if events %}
+        <h2>Events:</h2>
+
+        <ul class="events">
+            {% for event in events %}
+            <li>
+    			<a href="{{UserConfig.SITEROOTURL}}raffle/event.php?event_id={{event.id}}">{{event.name}}</a>
+    			on {{event.time|date('M j, Y')}} ({{event.yes_rsvp_count}} RSVPs)
+    		</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No events currently scheduled in this group</p>
+    {% endif %}
+</div>
+
+{% endblock %}
